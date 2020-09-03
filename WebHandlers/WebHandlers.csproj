@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SpotifyAPI.Web" Version="6.0.0-beta.12" />
+    <PackageReference Include="VkNet" Version="1.52.0" />
+    <PackageReference Include="VkNet.AudioBypassService" Version="1.6.0" />
+  </ItemGroup>
+
+</Project>

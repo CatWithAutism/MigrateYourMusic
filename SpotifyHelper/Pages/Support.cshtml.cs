@@ -9,11 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace SpotifyHelper.Pages
 {
-    public class PrivacyModel : PageModel
+    public class SupportModel : PageModel
     {
-        private readonly ILogger<PrivacyModel> _logger;
+        private readonly ILogger<SupportModel> _logger;
 
-        public PrivacyModel(ILogger<PrivacyModel> logger)
+        public SupportModel(ILogger<SupportModel> logger)
         {
             _logger = logger;
         }

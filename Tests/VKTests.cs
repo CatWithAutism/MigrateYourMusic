@@ -27,9 +27,9 @@ namespace Tests
         /// </summary>
         static VKTests()
         {
-            _login = "";
-            _password = "";
-            _screenName = "";
+            _login = "79015015323";
+            _password = "TestBotVKPassword10!";
+            _screenName = "dzargevich";
 
             //“естам в любом случае нужна авторизаци€.
             _api = VKUtils.AuthorizeApi(_login, _password);
@@ -54,8 +54,8 @@ namespace Tests
         public void GetAudioVKTest()
         {
             var user = VKUtils.GetUserByScreenName(_screenName, _api);
-            VKTrackListDownloader downloader = new VKTrackListDownloader(_api);
-            var trackList = downloader.GetTrackList(user);
+            VkTrackListDownloader downloader = new VkTrackListDownloader(_api);
+            var trackList = downloader.DownloadTrackList(user);
             Assert.AreNotEqual(null, trackList);
         }
 
@@ -63,10 +63,10 @@ namespace Tests
         public void GetSongPairs()
         {
             var user = VKUtils.GetUserByScreenName(_screenName, _api);
-            VKTrackListDownloader downloader = new VKTrackListDownloader(_api);
-            var trackList = downloader.GetTrackList(user);
+            VkTrackListDownloader downloader = new VkTrackListDownloader(_api);
+            var trackList = downloader.DownloadTrackList(user);
 
-            var d = SpotifyHandler.FindTracksPairs(trackList);
+            var d = SpotifySearchEngine.FindTracksPairs(trackList);
 
             StringBuilder sb = new StringBuilder();
             int i = 0;
@@ -76,7 +76,7 @@ namespace Tests
                 sb.Append($"{i}. VK: {c.Key.Artist} - {c.Key.Title} | Spotify: {c.Value.Artist} - {c.Value.Title}, " +
                     $"{c.Value.Album}, {c.Value.AlbumPicture}, {c.Value.Artist}, {c.Value.SpotifyUri}, {c.Value.Duration}\r\n");
             }
-            //File.WriteAllText(@"C:\Users\vlad3\Desktop\Result.txt", sb.ToString());
+            File.WriteAllText(@"C:\Users\vlad3\Desktop\Result1.txt", sb.ToString());
         }
     }
 }

@@ -19,6 +19,15 @@ namespace SpotifyHelper
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builder, config) =>
+                {
+                    config.Sources.Clear();
+
+                    config.AddIniFile("SpotifyHandlerConfig.ini", true, true);
+
+                    if (args != null)
+                        config.AddCommandLine(args);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

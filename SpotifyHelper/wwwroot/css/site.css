@@ -59,8 +59,10 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: #509BF5;
+    background-image: linear-gradient(transparent, #000);
 }
 .footer {
   position: absolute;
@@ -68,4 +70,11 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+.spotifyAuthButton {
+    width: 244px;
+    height: 44px;
+    border: none;
+    background: url(../images/buttons/login_spotify_button.png) no-repeat top center;
 }

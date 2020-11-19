@@ -6,8 +6,8 @@ using WebHandlers.Models;
 
 namespace WebHandlers.Interfaces
 {
-    public interface ISongListDownloader<T>
+    public interface ITrackListDownloader<T>
     {
-        IEnumerable<Track> GetTrackList(T param);
+        IEnumerable<Track> DownloadTrackList(T param);
     }
 }

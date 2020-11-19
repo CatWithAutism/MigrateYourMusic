@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-using WebHandlers.Handlers.Spotify;
+using WebHandlers.SearchEngines.Spotify;
 using WebHandlers.Models;
+using WebHandlers.Utils;
 
 namespace Tests
 {
@@ -15,7 +16,7 @@ namespace Tests
         [TestMethod]
         public void SearchTest()
         {
-            var song = SpotifyHandler.FindTrackPair(new Track { Artist = "Louna", Title = "Огня" });
+            var song = SpotifySearchEngine.FindTrackPair(new Track { Artist = "Louna", Title = "Огня" });
         }
     }
 }

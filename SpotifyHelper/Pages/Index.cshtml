@@ -4,7 +4,11 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <p class="text-white text-xl-left" style="font-size: 32px; font-stretch: expanded">
+        Привет, тут будет немного текста, так что дочитай до конца :) <br />
+        Для начала предоставь нашему приложению доступ для добавления музыки по кнопке ниже.<br />
+        <br />
+        <button onclick="location.href='@ViewData["AppAuthLink"]'" class="spotifyAuthButton"></button>
+    </p>
 </div>

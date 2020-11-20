@@ -24,15 +24,10 @@ namespace WebHandlers.Utils
         /// <returns>Если пользователь не будет найден, то вернет NULL.</returns>
         public static User GetUserByScreenName(string screenName, VkApi vkApi)
         {
-            if(string.IsNullOrWhiteSpace(screenName))
-            {
-                throw new ArgumentNullException(nameof(screenName), "ScreenName cannot be empty.");
-            }
-            else if(vkApi == null)
-            {
-                throw new ArgumentNullException(nameof(vkApi), "API cannot be null.");
-            }
-            else if(!vkApi.IsAuthorized)
+            Guarantee.IsStringNotNullOrEmpty(screenName, nameof(screenName));
+            Guarantee.IsArgumentNotNull(vkApi, nameof(vkApi));
+
+            if(!vkApi.IsAuthorized)
             {
                 throw new ArgumentException(nameof(vkApi), "API has to be authorized.");
             }
@@ -43,6 +38,9 @@ namespace WebHandlers.Utils
 
         public static VkApi AuthorizeApi(string login, string password)
         {
+            Guarantee.IsStringNotNullOrEmpty(login, nameof(login));
+            Guarantee.IsStringNotNullOrEmpty(password, nameof(password));
+
             ServiceCollection services = new ServiceCollection();
             services.AddAudioBypass();
             VkApi api = new VkApi(services);

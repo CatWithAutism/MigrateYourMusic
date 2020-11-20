@@ -6,8 +6,8 @@ using WebHandlers.Models;
 
 namespace WebHandlers.Interfaces
 {
-    public interface ITrackListDownloader<T>
+    public interface ITrackListDownloader<out T, in V> where T: Track
     {
-        IEnumerable<Track> DownloadTrackList(T param);
+        IEnumerable<T> DownloadTrackList(V param);
     }
 }

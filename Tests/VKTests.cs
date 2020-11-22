@@ -20,16 +20,21 @@ namespace Tests
         private static string _screenName;
         private static string _login;
         private static string _password;
-
+        private static string _clientId;
+        private static string _secretId;
 
         /// <summary>
         /// Авторизация API.
         /// </summary>
         static VKTests()
         {
-            _login = "79015015323";
-            _password = "TestBotVKPassword10!";
-            _screenName = "dzargevich";
+            var iniData = Utils.ReadFile(@"C:\Users\vlad3\source\repos\SpotifyHelper\SpotifyHelper\SpotifyHandlerConfig.ini");
+            _login = iniData.GetKey("VK.LOGIN");
+            _password = iniData.GetKey("VK.PASSWORD");
+            _screenName = iniData.GetKey("VK.SCREEN_NAME");
+
+            _clientId = iniData.GetKey("SPOTIFY.CLIENT_ID");
+            _secretId = iniData.GetKey("SPOTIFY.SECRET_ID");
 
             //Тестам в любом случае нужна авторизация.
             _api = VKUtils.AuthorizeApi(_login, _password);
@@ -54,7 +59,7 @@ namespace Tests
         public void GetAudioVKTest()
         {
             var user = VKUtils.GetUserByScreenName(_screenName, _api);
-            VkTrackListDownloader downloader = new VkTrackListDownloader(_api);
+            VkTrackListDownloader downloader = new VkTrackListDownloader(_api, 6000);
             var trackList = downloader.DownloadTrackList(user);
             Assert.AreNotEqual(null, trackList);
         }
@@ -63,18 +68,21 @@ namespace Tests
         public void GetSongPairs()
         {
             var user = VKUtils.GetUserByScreenName(_screenName, _api);
-            VkTrackListDownloader downloader = new VkTrackListDownloader(_api);
+            VkTrackListDownloader downloader = new VkTrackListDownloader(_api, 6000);
             var trackList = downloader.DownloadTrackList(user);
 
-            var d = SpotifySearchEngine.FindTracksPairs(trackList);
+            SpotifyHandler handler = SpotifyHandler.GetAuthorizedByIds(_clientId, _secretId);
+
+            var tracksPairs = handler.FindTracksPairs(trackList, 500, new System.Threading.CancellationToken(), null);
 
             StringBuilder sb = new StringBuilder();
             int i = 0;
-            foreach(var c in d)
+            foreach(var pair in tracksPairs)
             {
                 i++;
-                sb.Append($"{i}. VK: {c.Key.Artist} - {c.Key.Title} | Spotify: {c.Value.Artist} - {c.Value.Title}, " +
-                    $"{c.Value.Album}, {c.Value.AlbumPicture}, {c.Value.Artist}, {c.Value.SpotifyUri}, {c.Value.Duration}\r\n");
+                sb.Append($"{i}. VK: {pair.Key.Artist} - {pair.Key.Title} | Spotify: {pair.Value.Artist} - {pair.Value.Title}, " +
+                    $"{pair.Value.Album}, {pair.Value.AlbumPictureUri}, {pair.Value.Artist}, {pair.Value.SpotifyUri}, {pair.Value.Duration} " +
+                    $"| Similarity: {(int)(JaroWinkler.Similarity($"{pair.Key.Artist} - {pair.Key.Title}", $"{pair.Value.Artist} - {pair.Value.Title}") * 100)}%\r\n");
             }
             File.WriteAllText(@"C:\Users\vlad3\Desktop\Result1.txt", sb.ToString());
         }

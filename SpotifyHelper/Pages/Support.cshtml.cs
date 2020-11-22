@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace SpotifyHelper.Pages
+namespace MigrateYourMusic.Pages
 {
     public class SupportModel : PageModel
     {

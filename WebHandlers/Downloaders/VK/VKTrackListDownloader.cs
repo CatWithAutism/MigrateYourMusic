@@ -13,6 +13,7 @@ using VkNet.Model;
 using System.Linq;
 using WebHandlers.Interfaces;
 using WebHandlers.Utils;
+using VkNet.Model.Attachments;
 
 namespace WebHandlers.Downloaders.VK
 {
@@ -29,8 +30,8 @@ namespace WebHandlers.Downloaders.VK
         public VkTrackListDownloader(VkApi api, uint maxAudioPerRequest)
         {
             Guarantee.IsArgumentNotNull(api, nameof(api));
-            Guarantee.IsLessOrEqual(maxAudioPerRequest, nameof(maxAudioPerRequest), 0);
-            Guarantee.IsGreaterThan(maxAudioPerRequest, nameof(maxAudioPerRequest), 6000);
+            Guarantee.IsGreaterThan(maxAudioPerRequest, nameof(maxAudioPerRequest), 0);
+            Guarantee.IsLessOrEqual(maxAudioPerRequest, nameof(maxAudioPerRequest), 6000);
 
             if (!api.IsAuthorized)
                 throw new ArgumentException(nameof(api), "API has to be authorized.");
@@ -65,16 +66,16 @@ namespace WebHandlers.Downloaders.VK
                         Count = _maxAudioPerRequest
                     });
 
-                    tracksList.AddRange((IEnumerable<VkTrack>)vkAudioCollection);
+                    tracksList.AddRange(vkAudioCollection.Select(t => (VkTrack)t));
                 }
 
                 return tracksList;
             }
             else
             {
-                var vkAudioCollection = _api.Audio.Get(new AudioGetParams { OwnerId = user.Id });
+                var vkAudioCollection = _api.Audio.Get(new AudioGetParams { OwnerId = user.Id, Count = tracksCount});
 
-                return (IEnumerable<VkTrack>)vkAudioCollection;
+                return vkAudioCollection.Select(t => (VkTrack)t);
             }
         }
     }

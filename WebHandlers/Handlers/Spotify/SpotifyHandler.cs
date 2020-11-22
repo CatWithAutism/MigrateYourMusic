@@ -22,6 +22,22 @@ namespace WebHandlers.Handlers.Spotify
         public SpotifyHandler(string token, string tokenType = "Bearer") : base(token, tokenType) { }
 
         /// <summary>
+        /// Возвращает авторизованный клиент используя клиент и секрет ID.
+        /// Аналог конструктора с использованием <see cref="SpotifyClientConfig"/>
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="secretId"></param>
+        /// <returns></returns>
+        public static SpotifyHandler GetAuthorizedByIds(string clientId, string secretId)
+        {
+            Guarantee.IsStringNotNullOrEmpty(clientId, nameof(clientId));
+            Guarantee.IsStringNotNullOrEmpty(secretId, nameof(secretId));
+
+            return new SpotifyHandler(SpotifyClientConfig.CreateDefault()
+                .WithAuthenticator(new ClientCredentialsAuthenticator(clientId, secretId)));
+        }
+
+        /// <summary>
         /// Search the similar track on spotify via default track model.
         /// </summary>
         /// <param name="track">Track model</param>

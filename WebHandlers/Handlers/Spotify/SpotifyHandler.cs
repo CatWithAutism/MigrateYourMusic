@@ -56,7 +56,7 @@ namespace WebHandlers.Handlers.Spotify
             Guarantee.IsArgumentNotNull(track, nameof(track));
 
             SearchResponse taskResult = await Search.Item(
-                new SearchRequest(SearchRequest.Types.Track, $"{track.Artist} {track.Title}"));
+                new SearchRequest(SearchRequest.Types.Track, $"{track.Artist} {track.Title}") { Limit = 1 });
 
             if (taskResult.Tracks.Items.Count > 0)
             {

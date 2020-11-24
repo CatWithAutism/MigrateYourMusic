@@ -1,6 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Newtonsoft.Json;
+
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using VkNet;
@@ -80,10 +83,12 @@ namespace Tests
             foreach(var pair in tracksPairs)
             {
                 i++;
-                sb.Append($"{i}. VK: {pair.Key.Artist} - {pair.Key.Title} | Spotify: {pair.Value.Artist} - {pair.Value.Title}, " +
+                sb.Append($"{i}. VK: {pair.Key.Artist} - {pair.Key.Title} | ID:{pair.Value.Id} Spotify: {pair.Value.Artist} - {pair.Value.Title}, " +
                     $"{pair.Value.Album}, {pair.Value.AlbumPictureUri}, {pair.Value.Artist}, {pair.Value.SpotifyUri}, {pair.Value.Duration} " +
                     $"| Similarity: {(int)(JaroWinkler.Similarity($"{pair.Key.Artist} - {pair.Key.Title}", $"{pair.Value.Artist} - {pair.Value.Title}") * 100)}%\r\n");
             }
+            var d = Newtonsoft.Json.JsonConvert.SerializeObject(tracksPairs.ToList());
+            File.WriteAllText(@"C:\Users\vlad3\Desktop\ResultJson.txt", d);
             File.WriteAllText(@"C:\Users\vlad3\Desktop\Result1.txt", sb.ToString());
         }
     }

@@ -118,43 +118,25 @@ namespace WebHandlers.Handlers.Spotify
         /// </summary>
         /// <param name="spotifyTracks"></param>
         /// <returns></returns>
-        public bool SaveTracks(IEnumerable<SpotifyTrack> spotifyTracks)
-            => SaveTracksAsync(spotifyTracks).GetAwaiter().GetResult();
+        public void SaveTracks(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
+            => SaveTracksAsync(spotifyTracks, delay).GetAwaiter().GetResult();
 
         /// <summary>
         /// Save tracks to the user's library.
         /// </summary>
         /// <param name="spotifyTracks"></param>
+        /// <param name="delay"></param>
         /// <returns></returns>
-        public async Task<bool> SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks)
+        public async Task SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
         {
             Guarantee.IsEnumerableNotNullOrEmpty(spotifyTracks, nameof(spotifyTracks));
+            Guarantee.IsGreaterThan(delay, nameof(delay), 0);
 
-            List<bool> checkedList = await Library.CheckTracks(new LibraryCheckTracksRequest(spotifyTracks.Select(t => t.Id).ToList()));
-            if (checkedList.Count != spotifyTracks.Count())
+            foreach(var list in CommonUtils.SplitList(spotifyTracks, 50))
             {
-                return false;
+                await Library.SaveTracks(new LibrarySaveTracksRequest(list.Select(t => t.Id).ToList()));
+                await Task.Delay(delay);
             }
-
-            //Сортируем то, что уже было добавлено.
-            List<SpotifyTrack> sortedTracks = new List<SpotifyTrack>();
-            for (int i = 0; i < checkedList.Count; i++)
-            {
-                if (checkedList.ElementAt(i))
-                {
-                    sortedTracks.Add(spotifyTracks.ElementAt(i));
-                }
-            }
-
-            //Получаем треки и проверяем, чтобы после добавления они не перевалили за лимит
-            var libraryTracks = await Library.GetTracks();
-            if (!libraryTracks.Total.HasValue || !libraryTracks.Limit.HasValue ||
-                libraryTracks.Limit.Value <= libraryTracks.Total.Value + sortedTracks.Count)
-            {
-                return false;
-            }
-
-            return await Library.SaveTracks(new LibrarySaveTracksRequest(spotifyTracks.Select(t => t.Id).ToList()));
         }
     }
 }

@@ -1,19 +1,12 @@
 ﻿using WebHandlers.Models;
-using VkNet.AudioBypassService.Extensions;
 using VkNet;
 using VkNet.Model.RequestParams;
-using VkNet.Exception;
-
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 using VkNet.Model;
 using System.Linq;
 using WebHandlers.Interfaces;
 using WebHandlers.Utils;
-using VkNet.Model.Attachments;
 
 namespace WebHandlers.Downloaders.VK
 {
@@ -34,7 +27,7 @@ namespace WebHandlers.Downloaders.VK
             Guarantee.IsLessOrEqual(maxAudioPerRequest, nameof(maxAudioPerRequest), 6000);
 
             if (!api.IsAuthorized)
-                throw new ArgumentException(nameof(api), "API has to be authorized.");
+                throw new ArgumentException("API has to be authorized.", nameof(api));
 
             _api = api;
             _maxAudioPerRequest = maxAudioPerRequest;

@@ -1,15 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using SpotifyAPI.Web;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using WebHandlers.Handlers.Spotify;
 using WebHandlers.Models;
-using WebHandlers.Utils;
-using IniParser;
 
 namespace Tests
 {

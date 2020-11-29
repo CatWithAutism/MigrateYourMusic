@@ -1,18 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-
 using VkNet;
 using VkNet.AudioBypassService.Extensions;
 using VkNet.Model;
 
 namespace WebHandlers.Utils
 {
-    public static class VKUtils
+    public static class VkUtils
     {
         /// <summary>
         /// Получает пользователя по его уникальной URL.
@@ -29,10 +26,10 @@ namespace WebHandlers.Utils
 
             if(!vkApi.IsAuthorized)
             {
-                throw new ArgumentException(nameof(vkApi), "API has to be authorized.");
+                throw new ArgumentException("API has to be authorized.", nameof(vkApi));
             }
 
-            ReadOnlyCollection<User> users = vkApi.Users.Get(new string[] { screenName });
+            ReadOnlyCollection<User> users = vkApi.Users.Get(new[] { screenName });
             return users.FirstOrDefault();
         }
 

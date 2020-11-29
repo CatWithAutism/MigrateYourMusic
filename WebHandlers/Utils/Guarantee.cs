@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -9,11 +8,13 @@ namespace WebHandlers.Utils
     public static class Guarantee
     {
         #region Checks
+
         /// <summary>
         /// Checking for null condition
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
+        /// <param name="caller"></param>
         public static void IsArgumentNotNull(object value, string name, [CallerMemberName] string caller = "")
         {
             if (value != null)
@@ -27,6 +28,7 @@ namespace WebHandlers.Utils
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
+        /// <param name="caller"></param>
         public static void IsStringNotNullOrEmpty(string value, string name, [CallerMemberName] string caller = "")
         {
             if (!string.IsNullOrEmpty(value))
@@ -38,9 +40,9 @@ namespace WebHandlers.Utils
         /// <summary>
         /// Checking for empty or null enumerable
         /// </summary>
-        /// <typeparam name="T">Whatever you want :)</typeparam>
         /// <param name="enumerable"></param>
         /// <param name="name"></param>
+        /// <param name="caller"></param>
         public static void IsEnumerableNotNullOrEmpty(IEnumerable<object> enumerable, string name, [CallerMemberName] string caller = "")
         {
             if (enumerable != null && enumerable.Any())

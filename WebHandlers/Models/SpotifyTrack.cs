@@ -1,9 +1,6 @@
 ﻿using SpotifyAPI.Web;
-
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using WebHandlers.Utils;
 
 namespace WebHandlers.Models
 {
@@ -30,7 +27,9 @@ namespace WebHandlers.Models
         public string Id { get; set; }
 
         public static explicit operator SpotifyTrack(FullTrack track)
-            => new SpotifyTrack
+        {
+            Guarantee.IsArgumentNotNull(track, nameof(track));
+            return new SpotifyTrack
             {
                 Id = track.Id,
                 Artist = string.Join(string.Empty, track.Artists.Select(t => t.Name)),
@@ -40,6 +39,6 @@ namespace WebHandlers.Models
                 SpotifyUri = track.Uri,
                 AlbumPictureUri = track.Album.Images.FirstOrDefault()?.Url
             };
-
+        }
     }
 }

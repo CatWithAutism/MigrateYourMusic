@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 using VkNet.Model.Attachments;
+using WebHandlers.Utils;
 
 namespace WebHandlers.Models
 {
@@ -13,13 +11,16 @@ namespace WebHandlers.Models
         /// </summary>
         public long? OwnerId { get; set; }
 
-        public static explicit operator VkTrack(Audio audio)
-            => new VkTrack
+        public static explicit operator VkTrack(Audio track)
+        {
+            Guarantee.IsArgumentNotNull(track, nameof(track));
+            return new VkTrack
             {
-                Artist = audio.Artist,
-                Title = audio.Title,
-                Duration = audio.Duration,
-                OwnerId = audio.OwnerId
+                Artist = track.Artist,
+                Title = track.Title,
+                Duration = track.Duration,
+                OwnerId = track.OwnerId
             };
+        }
     }
 }

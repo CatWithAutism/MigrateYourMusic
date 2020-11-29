@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -12,14 +11,14 @@ namespace WebHandlers.Interfaces
     {
         T FindTrackPair(Track track);
 
-        Task<T> FindTrackPairAsync(Track track);
+        Task<T> FindTrackPairAsync(Track track, CancellationToken ct);
 
-        Dictionary<Track, T> FindTracksPairs(IEnumerable<Track> tracks, int delay, CancellationToken ct, Action<float> progress = null);
+        Dictionary<Track, T> FindTracksPairs(IEnumerable<Track> tracks, int delay, Action<float> progress = null);
 
         Task<Dictionary<Track, T>> FindTracksPairsAsync(IEnumerable<Track> tracks, int delay, CancellationToken ct, Action<float> progress = null);
 
         void SaveTracks(IEnumerable<T> spotifyTracks, int delay);
 
-        Task SaveTracksAsync(IEnumerable<T> spotifyTracks, int delay);
+        Task SaveTracksAsync(IEnumerable<T> spotifyTracks, int delay, CancellationToken ct);
     }
 }

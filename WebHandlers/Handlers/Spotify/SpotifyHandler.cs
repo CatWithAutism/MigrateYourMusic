@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,22 +42,28 @@ namespace WebHandlers.Handlers.Spotify
         /// <param name="track">Track model</param>
         /// <returns>Spotify track info.</returns>
         public SpotifyTrack FindTrackPair(Track track)
-            => FindTrackPairAsync(track).GetAwaiter().GetResult();
+            => FindTrackPairAsync(track, new CancellationToken()).GetAwaiter().GetResult();
 
 
         /// <summary>
         /// Async search the similar track on spotify via default track model.
         /// </summary>
         /// <param name="track">Track model</param>
+        /// <param name="ct"></param>
         /// <returns>Spotify track info.</returns>
-        public async Task<SpotifyTrack> FindTrackPairAsync(Track track)
+        public async Task<SpotifyTrack> FindTrackPairAsync(Track track, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
+            
             Guarantee.IsArgumentNotNull(track, nameof(track));
 
             SearchResponse taskResult = await Search.Item(
-                new SearchRequest(SearchRequest.Types.Track, $"{track.Artist} {track.Title}") { Limit = 1 });
+                new SearchRequest(SearchRequest.Types.Track, $"{track.Artist} {track.Title}")
+                {
+                    Limit = 1
+                });
 
-            if (taskResult.Tracks.Items.Count > 0)
+            if (taskResult.Tracks.Items != null && taskResult.Tracks.Items.Any())
             {
                 //Extract all useful information
                 return (SpotifyTrack)taskResult.Tracks.Items.FirstOrDefault();
@@ -71,20 +76,25 @@ namespace WebHandlers.Handlers.Spotify
         /// Search similar tracks on spotify via default track model.
         /// </summary>
         /// <param name="tracks">Tracks models</param>
+        /// <param name="delay"></param>
+        /// <param name="progress"></param>
         /// <returns>Dictionary of default models and spotify tracks.</returns>
-        public Dictionary<Track, SpotifyTrack> FindTracksPairs(IEnumerable<Track> tracks, int delay,
-            CancellationToken ct, Action<float> progress = null)
-            => FindTracksPairsAsync(tracks, delay, ct, progress).GetAwaiter().GetResult();
+        public Dictionary<Track, SpotifyTrack> FindTracksPairs(IEnumerable<Track> tracks, int delay, Action<float> progress = null)
+            => FindTracksPairsAsync(tracks, delay, new CancellationToken(), progress).GetAwaiter().GetResult();
 
         /// <summary>
         /// Async search similar tracks on spotify via default track model.
         /// </summary>
         /// <param name="tracks">Tracks models</param>
+        /// <param name="delay"></param>
+        /// <param name="ct"></param>
+        /// <param name="progress"></param>
         /// <returns>Dictionary of default models and spotify tracks.</returns>
         public async Task<Dictionary<Track, SpotifyTrack>> FindTracksPairsAsync(IEnumerable<Track> tracks, int delay,
             CancellationToken ct, Action<float> progress = null)
         {
             Guarantee.IsEnumerableNotNullOrEmpty(tracks, nameof(tracks));
+            Guarantee.IsGreaterThan(delay, nameof(delay), 0);
 
             Dictionary<Track, SpotifyTrack> songPairs = new Dictionary<Track, SpotifyTrack>();
             try
@@ -95,14 +105,16 @@ namespace WebHandlers.Handlers.Spotify
                 foreach (var track in tracks)
                 {
                     ct.ThrowIfCancellationRequested();
-                    SpotifyTrack spotifyTrack = await FindTrackPairAsync(track);
+                    
+                    SpotifyTrack spotifyTrack = await FindTrackPairAsync(track, new CancellationToken());
                     if (spotifyTrack != null)
                     {
                         songPairs.Add(track, spotifyTrack);
                     }
 
                     progress?.Invoke(100f / tracksCount * ++processed);
-                    await Task.Delay(delay);
+                    
+                    await Task.Delay(delay, ct);
                 }
 
                 return songPairs;
@@ -117,17 +129,19 @@ namespace WebHandlers.Handlers.Spotify
         /// Save tracks to the user's library.
         /// </summary>
         /// <param name="spotifyTracks"></param>
+        /// <param name="delay"></param>
         /// <returns></returns>
         public void SaveTracks(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
-            => SaveTracksAsync(spotifyTracks, delay).GetAwaiter().GetResult();
+            => SaveTracksAsync(spotifyTracks, delay, new CancellationToken()).GetAwaiter().GetResult();
 
         /// <summary>
         /// Save tracks to the user's library.
         /// </summary>
         /// <param name="spotifyTracks"></param>
         /// <param name="delay"></param>
+        /// <param name="ct"></param>
         /// <returns></returns>
-        public async Task SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
+        public async Task SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks, int delay, CancellationToken ct)
         {
             Guarantee.IsEnumerableNotNullOrEmpty(spotifyTracks, nameof(spotifyTracks));
             Guarantee.IsGreaterThan(delay, nameof(delay), 0);
@@ -135,7 +149,8 @@ namespace WebHandlers.Handlers.Spotify
             foreach(var list in CommonUtils.SplitList(spotifyTracks, 50))
             {
                 await Library.SaveTracks(new LibrarySaveTracksRequest(list.Select(t => t.Id).ToList()));
-                await Task.Delay(delay);
+                await Task.Delay(delay, ct);
+                ct.ThrowIfCancellationRequested();
             }
         }
     }

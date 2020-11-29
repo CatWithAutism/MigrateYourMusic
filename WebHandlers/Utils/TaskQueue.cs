@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
@@ -19,9 +17,9 @@ namespace WebHandlers.Utils
             public Action<int> OnPositionUpdated;
         }
 
-        private SemaphoreSlim _semaphore;
         private volatile bool _isWorking;
-        private ConcurrentQueue<QueueElement> _taskQueue;
+        private readonly SemaphoreSlim _semaphore;
+        private readonly ConcurrentQueue<QueueElement> _taskQueue;
 
         public bool IsWorking { get => _isWorking; }
 

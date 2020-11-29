@@ -3,92 +3,87 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using SpotifyAPI.Web;
-
 using WebHandlers.Interfaces;
 using WebHandlers.Models;
 using WebHandlers.Utils;
 
 namespace WebHandlers.Handlers.Spotify
 {
+    /// <summary>
+    /// Wrapper of the <see cref="SpotifyClient"/>
+    /// Implements: <see cref="IWebHandler{SpotifyHandler}"/>
+    /// </summary>
     public class SpotifyHandler : SpotifyClient, IWebHandler<SpotifyTrack>
     {
-        public SpotifyHandler(IToken token) : base(token) { }
-
-        public SpotifyHandler(SpotifyClientConfig config) : base(config) { }
-
-        public SpotifyHandler(string token, string tokenType = "Bearer") : base(token, tokenType) { }
-
-        /// <summary>
-        /// Возвращает авторизованный клиент используя клиент и секрет ID.
-        /// Аналог конструктора с использованием <see cref="SpotifyClientConfig"/>
-        /// </summary>
-        /// <param name="clientId"></param>
-        /// <param name="secretId"></param>
-        /// <returns></returns>
-        public static SpotifyHandler GetAuthorizedByIds(string clientId, string secretId)
+        public SpotifyHandler(IToken token) : base(token)
         {
-            Guarantee.IsStringNotNullOrEmpty(clientId, nameof(clientId));
-            Guarantee.IsStringNotNullOrEmpty(secretId, nameof(secretId));
+        }
 
-            return new SpotifyHandler(SpotifyClientConfig.CreateDefault()
-                .WithAuthenticator(new ClientCredentialsAuthenticator(clientId, secretId)));
+        public SpotifyHandler(SpotifyClientConfig config) : base(config)
+        {
+        }
+
+        public SpotifyHandler(string token, string tokenType = "Bearer") : base(token, tokenType)
+        {
         }
 
         /// <summary>
-        /// Search the similar track on spotify via default track model.
+        ///     Search the similar track on spotify via default track model.
         /// </summary>
         /// <param name="track">Track model</param>
         /// <returns>Spotify track info.</returns>
         public SpotifyTrack FindTrackPair(Track track)
-            => FindTrackPairAsync(track, new CancellationToken()).GetAwaiter().GetResult();
+        {
+            return FindTrackPairAsync(track, new CancellationToken()).GetAwaiter().GetResult();
+        }
 
 
         /// <summary>
-        /// Async search the similar track on spotify via default track model.
+        ///     Async searching of the similar track on spotify via default track model.
         /// </summary>
         /// <param name="track">Track model</param>
-        /// <param name="ct"></param>
+        /// <param name="ct">Cancellation token.</param>
         /// <returns>Spotify track info.</returns>
         public async Task<SpotifyTrack> FindTrackPairAsync(Track track, CancellationToken ct)
         {
             ct.ThrowIfCancellationRequested();
-            
+
             Guarantee.IsArgumentNotNull(track, nameof(track));
 
-            SearchResponse taskResult = await Search.Item(
+            var taskResult = await Search.Item(
                 new SearchRequest(SearchRequest.Types.Track, $"{track.Artist} {track.Title}")
                 {
                     Limit = 1
                 });
 
             if (taskResult.Tracks.Items != null && taskResult.Tracks.Items.Any())
-            {
                 //Extract all useful information
-                return (SpotifyTrack)taskResult.Tracks.Items.FirstOrDefault();
-            }
+                return (SpotifyTrack) taskResult.Tracks.Items.FirstOrDefault();
 
             return null;
         }
 
         /// <summary>
-        /// Search similar tracks on spotify via default track model.
+        ///     Searching of similar tracks on spotify via default track model.
         /// </summary>
         /// <param name="tracks">Tracks models</param>
-        /// <param name="delay"></param>
-        /// <param name="progress"></param>
+        /// <param name="delay">Delay between requests. Should be more than -1</param>
+        /// <param name="progress">Callback to inform about current progress.</param>
         /// <returns>Dictionary of default models and spotify tracks.</returns>
-        public Dictionary<Track, SpotifyTrack> FindTracksPairs(IEnumerable<Track> tracks, int delay, Action<float> progress = null)
-            => FindTracksPairsAsync(tracks, delay, new CancellationToken(), progress).GetAwaiter().GetResult();
+        public Dictionary<Track, SpotifyTrack> FindTracksPairs(IEnumerable<Track> tracks, int delay,
+            Action<float> progress = null)
+        {
+            return FindTracksPairsAsync(tracks, delay, new CancellationToken(), progress).GetAwaiter().GetResult();
+        }
 
         /// <summary>
-        /// Async search similar tracks on spotify via default track model.
+        ///     Async searching of similar tracks on spotify via default track model.
         /// </summary>
         /// <param name="tracks">Tracks models</param>
-        /// <param name="delay"></param>
-        /// <param name="ct"></param>
-        /// <param name="progress"></param>
+        /// <param name="delay">Delay between requests. Should be more than -1</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <param name="progress">Callback to inform about current progress.</param>
         /// <returns>Dictionary of default models and spotify tracks.</returns>
         public async Task<Dictionary<Track, SpotifyTrack>> FindTracksPairsAsync(IEnumerable<Track> tracks, int delay,
             CancellationToken ct, Action<float> progress = null)
@@ -96,24 +91,22 @@ namespace WebHandlers.Handlers.Spotify
             Guarantee.IsEnumerableNotNullOrEmpty(tracks, nameof(tracks));
             Guarantee.IsGreaterThan(delay, nameof(delay), 0);
 
-            Dictionary<Track, SpotifyTrack> songPairs = new Dictionary<Track, SpotifyTrack>();
+            var songPairs = new Dictionary<Track, SpotifyTrack>();
             try
             {
-                int processed = 0;
-                int tracksCount = tracks.Count();
+                //to avoid enumeration if it isn't necessary
+                var tracksCount = progress == null ? 0 : tracks.Count();
+                var processed = 0;
 
                 foreach (var track in tracks)
                 {
                     ct.ThrowIfCancellationRequested();
-                    
-                    SpotifyTrack spotifyTrack = await FindTrackPairAsync(track, new CancellationToken());
-                    if (spotifyTrack != null)
-                    {
-                        songPairs.Add(track, spotifyTrack);
-                    }
+
+                    var spotifyTrack = await FindTrackPairAsync(track, new CancellationToken());
+                    if (spotifyTrack != null) songPairs.Add(track, spotifyTrack);
 
                     progress?.Invoke(100f / tracksCount * ++processed);
-                    
+
                     await Task.Delay(delay, ct);
                 }
 
@@ -126,32 +119,53 @@ namespace WebHandlers.Handlers.Spotify
         }
 
         /// <summary>
-        /// Save tracks to the user's library.
+        ///     Save tracks into the library of user.
         /// </summary>
-        /// <param name="spotifyTracks"></param>
-        /// <param name="delay"></param>
+        /// <param name="spotifyTracks">Spotify tracks which is gonna be added.</param>
+        /// <param name="delay">Delay between requests. Should be more than -1</param>
         /// <returns></returns>
         public void SaveTracks(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
-            => SaveTracksAsync(spotifyTracks, delay, new CancellationToken()).GetAwaiter().GetResult();
+        {
+            SaveTracksAsync(spotifyTracks, delay, new CancellationToken()).GetAwaiter().GetResult();
+        }
 
         /// <summary>
-        /// Save tracks to the user's library.
+        ///     Async saving of tracks into the library of user.
         /// </summary>
-        /// <param name="spotifyTracks"></param>
-        /// <param name="delay"></param>
-        /// <param name="ct"></param>
+        /// <param name="spotifyTracks">Spotify tracks which is gonna be added.</param>
+        /// <param name="delay">Delay between requests. Should be more than -1</param>
+        /// <param name="ct">Token to cancel.</param>
         /// <returns></returns>
         public async Task SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks, int delay, CancellationToken ct)
         {
             Guarantee.IsEnumerableNotNullOrEmpty(spotifyTracks, nameof(spotifyTracks));
-            Guarantee.IsGreaterThan(delay, nameof(delay), 0);
+            Guarantee.IsGreaterOrEqual(delay, nameof(delay), 0);
 
-            foreach(var list in CommonUtils.SplitList(spotifyTracks, 50))
+            foreach (var list in CommonUtils.SplitOnLists(spotifyTracks, 50))
             {
-                await Library.SaveTracks(new LibrarySaveTracksRequest(list.Select(t => t.Id).ToList()));
-                await Task.Delay(delay, ct);
                 ct.ThrowIfCancellationRequested();
+                await Library.SaveTracks(new LibrarySaveTracksRequest(list.Where(t => t != null)
+                    .Select(t => t.Id)
+                    .Distinct()
+                    .ToList()));
+                await Task.Delay(delay, ct);
             }
+        }
+
+        /// <summary>
+        ///     Returns an authorized client via clientID and secretID.
+        ///     This is an analog of constructor which is using <see cref="SpotifyClientConfig" />
+        /// </summary>
+        /// <param name="clientId">ClientID which you can get from your SpotifyApp</param>
+        /// <param name="secretId">SecretID which you can get from your SpotifyApp</param>
+        /// <returns>Instance of <see cref="SpotifyHandler" /></returns>
+        public static SpotifyHandler GetAuthorizedByIds(string clientId, string secretId)
+        {
+            Guarantee.IsStringNotNullOrEmpty(clientId, nameof(clientId));
+            Guarantee.IsStringNotNullOrEmpty(secretId, nameof(secretId));
+
+            return new SpotifyHandler(SpotifyClientConfig.CreateDefault()
+                .WithAuthenticator(new ClientCredentialsAuthenticator(clientId, secretId)));
         }
     }
 }

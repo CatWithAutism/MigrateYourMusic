@@ -6,6 +6,8 @@ namespace Tests
     public static class Utils
     {
         public static IniData ReadFile(string path)
-            => new FileIniDataParser().ReadFile(path);
+        {
+            return new FileIniDataParser().ReadFile(path);
+        }
     }
 }

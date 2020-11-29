@@ -1,13 +1,15 @@
-﻿using System;
-using VkNet.Model.Attachments;
+﻿using VkNet.Model.Attachments;
 using WebHandlers.Utils;
 
 namespace WebHandlers.Models
 {
+    /// <summary>
+    /// The model which is using in this application to handle tracks from VK.
+    /// </summary>
     public class VkTrack : Track
     {
         /// <summary>
-        /// Владелец трека.
+        ///     Owner of the track.
         /// </summary>
         public long? OwnerId { get; set; }
 

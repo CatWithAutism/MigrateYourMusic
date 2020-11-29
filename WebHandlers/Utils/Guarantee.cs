@@ -10,7 +10,7 @@ namespace WebHandlers.Utils
         #region Checks
 
         /// <summary>
-        /// Checking for null condition
+        ///     Checking for null condition
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
@@ -24,7 +24,7 @@ namespace WebHandlers.Utils
         }
 
         /// <summary>
-        /// Checking for null or empty string
+        ///     Checking for null or empty string
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
@@ -38,88 +38,118 @@ namespace WebHandlers.Utils
         }
 
         /// <summary>
-        /// Checking for empty or null enumerable
+        ///     Checking for empty or null enumerable
         /// </summary>
         /// <param name="enumerable"></param>
         /// <param name="name"></param>
         /// <param name="caller"></param>
-        public static void IsEnumerableNotNullOrEmpty(IEnumerable<object> enumerable, string name, [CallerMemberName] string caller = "")
+        public static void IsEnumerableNotNullOrEmpty(IEnumerable<object> enumerable, string name,
+            [CallerMemberName] string caller = "")
         {
             if (enumerable != null && enumerable.Any())
                 return;
 
             throw new ArgumentException($"Enumerable with name - {name} is null or empty. Method - {caller}");
         }
+
         #endregion
 
         #region GreaterThan
 
         /// <summary>
-        /// Throw an <see cref="ArgumentException"/> if <paramref name="value"/> less or equal <paramref name="compareValue"/>
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> less or equal
+        ///     <paramref name="compareValue" />
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
         /// <param name="compareValue"></param>
         /// <param name="caller"></param>
-        public static void IsGreaterThan(int value, string name, int compareValue, [CallerMemberName] string caller = "")
+        public static void IsGreaterThan(int value, string name, int compareValue,
+            [CallerMemberName] string caller = "")
         {
             if (value > compareValue)
                 return;
 
-            throw new ArgumentException($"Variable - {name} should be greater than {compareValue} in the method {caller}.");
+            throw new ArgumentException(
+                $"Variable - {name} should be greater than {compareValue} in the method {caller}.");
         }
 
         /// <summary>
-        /// Throw an <see cref="ArgumentException"/> if <paramref name="value"/> less or equal <paramref name="compareValue"/>
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> less or equal
+        ///     <paramref name="compareValue" />
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
         /// <param name="compareValue"></param>
         /// <param name="caller"></param>
-        public static void IsGreaterThan(uint value, string name, uint compareValue, [CallerMemberName] string caller = "")
+        public static void IsGreaterThan(uint value, string name, uint compareValue,
+            [CallerMemberName] string caller = "")
         {
             if (value > compareValue)
                 return;
 
-            throw new ArgumentException($"Variable - {name} should be greater than {compareValue} in the method {caller}.");
+            throw new ArgumentException(
+                $"Variable - {name} should be greater than {compareValue} in the method {caller}.");
         }
 
         #endregion
 
         #region GreaterOrEqual
+        /// <summary>
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> less or equal
+        ///     <paramref name="compareValue" />
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="name"></param>
+        /// <param name="compareValue"></param>
+        /// <param name="caller"></param>
+        public static void IsGreaterOrEqual(int value, string name, int compareValue,
+            [CallerMemberName] string caller = "")
+        {
+            if (value >= compareValue)
+                return;
 
+            throw new ArgumentException(
+                $"Variable - {name} should be greater than {compareValue} in the method {caller}.");
+        }
         #endregion
 
         #region LessOrEqual
+
         /// <summary>
-        /// Throw an <see cref="ArgumentException"/> if <paramref name="value"/> greate than <paramref name="compareValue"/>
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> greate than <paramref name="compareValue" />
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
         /// <param name="compareValue"></param>
         /// <param name="caller"></param>
-        public static void IsLessOrEqual(int value, string name, int compareValue, [CallerMemberName] string caller = "")
+        public static void IsLessOrEqual(int value, string name, int compareValue,
+            [CallerMemberName] string caller = "")
         {
             if (value <= compareValue)
                 return;
 
-            throw new ArgumentException($"Variable - {name} should be less or equal {compareValue} in the method {caller}.");
+            throw new ArgumentException(
+                $"Variable - {name} should be less or equal {compareValue} in the method {caller}.");
         }
 
         /// <summary>
-        /// Throw an <see cref="ArgumentException"/> if <paramref name="value"/> greate than <paramref name="compareValue"/>
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> greate than <paramref name="compareValue" />
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
         /// <param name="compareValue"></param>
         /// <param name="caller"></param>
-        public static void IsLessOrEqual(uint value, string name, uint compareValue, [CallerMemberName] string caller = "")
+        public static void IsLessOrEqual(uint value, string name, uint compareValue,
+            [CallerMemberName] string caller = "")
         {
             if (value <= compareValue)
                 return;
 
-            throw new ArgumentException($"Variable - {name} should be less or equal {compareValue} in the method {caller}.");
+            throw new ArgumentException(
+                $"Variable - {name} should be less or equal {compareValue} in the method {caller}.");
         }
+
         #endregion
 
         #region LessThan

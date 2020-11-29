@@ -11,8 +11,9 @@ namespace MigrateYourMusic
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((builder, config) =>
                 {
                     config.Sources.Clear();
@@ -27,5 +28,6 @@ namespace MigrateYourMusic
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseIISIntegration();
                 });
+        }
     }
 }

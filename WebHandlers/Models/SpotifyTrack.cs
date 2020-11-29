@@ -1,29 +1,20 @@
-﻿using SpotifyAPI.Web;
-using System.Linq;
+﻿using System.Linq;
+using SpotifyAPI.Web;
 using WebHandlers.Utils;
 
 namespace WebHandlers.Models
 {
+    /// <summary>
+    /// The model which is using in this application to handle tracks from Spotify.
+    /// </summary>
     public class SpotifyTrack : Track
     {
-        /// <summary>
-        /// Альбом.
-        /// </summary>
         public string Album { get; set; }
-
-        /// <summary>
-        /// Картинка от альбома.
-        /// </summary>
+        
         public string AlbumPictureUri { get; set; }
-
-        /// <summary>
-        /// Уникальный адресс внутри спотифая.
-        /// </summary>
+        
         public string SpotifyUri { get; set; }
-
-        /// <summary>
-        /// Уникальный идентификатор
-        /// </summary>
+        
         public string Id { get; set; }
 
         public static explicit operator SpotifyTrack(FullTrack track)

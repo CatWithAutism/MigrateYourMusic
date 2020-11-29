@@ -10,12 +10,13 @@ namespace Tests
         [TestMethod]
         public void SearchTest()
         {
-            var iniData = Utils.ReadFile(@"C:\Users\vlad3\source\repos\SpotifyHelper\SpotifyHelper\SpotifyHandlerConfig.ini");
-            string clientId = iniData.GetKey("SPOTIFY.CLIENT_ID");
-            string secretId = iniData.GetKey("SPOTIFY.SECRET_ID");
+            var iniData =
+                Utils.ReadFile(@"C:\Users\vlad3\source\repos\SpotifyHelper\SpotifyHelper\SpotifyHandlerConfig.ini");
+            var clientId = iniData.GetKey("SPOTIFY.CLIENT_ID");
+            var secretId = iniData.GetKey("SPOTIFY.SECRET_ID");
 
-            SpotifyHandler handler = SpotifyHandler.GetAuthorizedByIds(clientId, secretId);
-            var song = handler.FindTrackPair(new Track { Artist = "Louna", Title = "Огня" });
+            var handler = SpotifyHandler.GetAuthorizedByIds(clientId, secretId);
+            var song = handler.FindTrackPair(new Track {Artist = "Louna", Title = "Огня"});
 
             Assert.IsNotNull(song);
         }

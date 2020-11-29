@@ -1,32 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace WebHandlers.Utils
 {
     public class TaskQueue<T>
     {
-        private class QueueElement
-        {
-            public Func<Task<T>> TaskGenerator;
-            public Action OnStarted;
-            public Action OnCrashed;
-            public Action<T> OnEnded;
-            public Action<int> OnPositionUpdated;
-        }
-
-        private volatile bool _isWorking;
         private readonly SemaphoreSlim _semaphore;
         private readonly ConcurrentQueue<QueueElement> _taskQueue;
 
-        public bool IsWorking { get => _isWorking; }
-
-        public event Action<int> OnQueueUpdated;
+        private volatile bool _isWorking;
 
         /// <summary>
-        /// The default constructor.
+        ///     The default constructor.
         /// </summary>
         /// <param name="maxRunningTasks">Maximum of running tasks at the same time.</param>
         public TaskQueue(int maxRunningTasks)
@@ -35,11 +23,16 @@ namespace WebHandlers.Utils
             _taskQueue = new ConcurrentQueue<QueueElement>();
         }
 
+        public bool IsWorking => _isWorking;
 
-        public void EnqueueTask(Func<Task<T>> taskGenerator, Action onStart, Action onCrash, Action<T> onEnd, Action<int> onPositionUpdated)
+        public event Action<int> OnQueueUpdated;
+
+
+        public void EnqueueTask(Func<Task<T>> taskGenerator, Action onStart, Action onCrash, Action<T> onEnd,
+            Action<int> onPositionUpdated)
         {
             Guarantee.IsArgumentNotNull(taskGenerator, nameof(taskGenerator));
-            _taskQueue.Enqueue(new QueueElement()
+            _taskQueue.Enqueue(new QueueElement
             {
                 TaskGenerator = taskGenerator,
                 OnStarted = onStart,
@@ -56,17 +49,16 @@ namespace WebHandlers.Utils
 
             await _semaphore.WaitAsync();
 
-            while(_taskQueue.Count > 0)
-            {
-                if (_taskQueue.TryDequeue(out QueueElement queueElement))
+            while (_taskQueue.Count > 0)
+                if (_taskQueue.TryDequeue(out var queueElement))
                 {
-                    for (int j = 0; j < _taskQueue.Count; j++)
+                    for (var j = 0; j < _taskQueue.Count; j++)
                     {
-                        QueueElement tmp = _taskQueue.ElementAt(j);
+                        var tmp = _taskQueue.ElementAt(j);
                         tmp.OnPositionUpdated(j);
                     }
 
-                    Task<T> task = queueElement.TaskGenerator();
+                    var task = queueElement.TaskGenerator();
                     try
                     {
                         queueElement.OnStarted();
@@ -75,20 +67,24 @@ namespace WebHandlers.Utils
                     finally
                     {
                         if (task.IsCompleted)
-                        {
                             queueElement.OnEnded(task.Result);
-                        }
                         else
-                        {
                             queueElement.OnCrashed();
-                        }
                         _semaphore.Release();
                     }
                 }
-            }
-            
+
             if (_taskQueue.Count == 0)
                 _isWorking = false;
+        }
+
+        private class QueueElement
+        {
+            public Action OnCrashed;
+            public Action<T> OnEnded;
+            public Action<int> OnPositionUpdated;
+            public Action OnStarted;
+            public Func<Task<T>> TaskGenerator;
         }
     }
 }

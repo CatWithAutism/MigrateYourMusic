@@ -17,8 +17,8 @@ namespace WebHandlers.Interfaces
         Task<Dictionary<Track, T>> FindTracksPairsAsync(IEnumerable<Track> tracks, int delay, CancellationToken ct,
             Action<float> progress = null);
 
-        void SaveTracks(IEnumerable<T> spotifyTracks, int delay);
+        bool SaveTracks(IEnumerable<T> spotifyTracks, int delay);
 
-        Task SaveTracksAsync(IEnumerable<T> spotifyTracks, int delay, CancellationToken ct);
+        Task<bool> SaveTracksAsync(IEnumerable<T> spotifyTracks, int delay, CancellationToken ct);
     }
 }

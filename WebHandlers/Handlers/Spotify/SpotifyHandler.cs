@@ -101,11 +101,21 @@ namespace WebHandlers.Handlers.Spotify
                 {
                     ct.ThrowIfCancellationRequested();
 
-                    var spotifyTrack = await FindTrackPairAsync(track, new CancellationToken());
+                    SpotifyTrack spotifyTrack;
+                    try
+                    {
+                        spotifyTrack = await FindTrackPairAsync(track, new CancellationToken());
+                    }
+                    catch (APITooManyRequestsException tooManyRequestsException)
+                    {
+                        //if happened then multiply delay by 2
+                        delay *= 2;
+                        await Task.Delay(tooManyRequestsException.RetryAfter.Milliseconds, ct);
+                        spotifyTrack = await FindTrackPairAsync(track, new CancellationToken());
+                    }
+                    
                     if (spotifyTrack != null) songPairs.Add(track, spotifyTrack);
-
                     progress?.Invoke(100f / tracksCount * ++processed);
-
                     await Task.Delay(delay, ct);
                 }
 
@@ -123,9 +133,9 @@ namespace WebHandlers.Handlers.Spotify
         /// <param name="spotifyTracks">Spotify tracks which is gonna be added.</param>
         /// <param name="delay">Delay between requests. Should be more than -1</param>
         /// <returns></returns>
-        public void SaveTracks(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
+        public bool SaveTracks(IEnumerable<SpotifyTrack> spotifyTracks, int delay)
         {
-            SaveTracksAsync(spotifyTracks, delay, new CancellationToken()).GetAwaiter().GetResult();
+            return SaveTracksAsync(spotifyTracks, delay, new CancellationToken()).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -135,7 +145,7 @@ namespace WebHandlers.Handlers.Spotify
         /// <param name="delay">Delay between requests. Should be more than -1</param>
         /// <param name="ct">Token to cancel.</param>
         /// <returns></returns>
-        public async Task SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks, int delay, CancellationToken ct)
+        public async Task<bool> SaveTracksAsync(IEnumerable<SpotifyTrack> spotifyTracks, int delay, CancellationToken ct)
         {
             Guarantee.IsEnumerableNotNullOrEmpty(spotifyTracks, nameof(spotifyTracks));
             Guarantee.IsGreaterOrEqual(delay, nameof(delay), 0);
@@ -143,12 +153,30 @@ namespace WebHandlers.Handlers.Spotify
             foreach (var list in CommonUtils.SplitOnLists(spotifyTracks, 50))
             {
                 ct.ThrowIfCancellationRequested();
-                await Library.SaveTracks(new LibrarySaveTracksRequest(list.Where(t => t != null)
-                    .Select(t => t.Id)
-                    .Distinct()
-                    .ToList()));
+                
+                try
+                {
+                    await Library.SaveTracks(new LibrarySaveTracksRequest(list.Where(t => t != null)
+                        .Select(t => t.Id)
+                        .Distinct()
+                        .ToList()));
+                }
+                catch (APITooManyRequestsException tooManyRequestsException)
+                {
+                    //if happened then multiply delay by 2
+                    delay *= 2;
+                    //wait retryafter and go on
+                    await Task.Delay(tooManyRequestsException.RetryAfter.Milliseconds, ct);
+                    await Library.SaveTracks(new LibrarySaveTracksRequest(list.Where(t => t != null)
+                        .Select(t => t.Id)
+                        .Distinct()
+                        .ToList()));
+                }
+                
                 await Task.Delay(delay, ct);
             }
+
+            return true;
         }
 
         /// <summary>

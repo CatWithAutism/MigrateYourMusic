@@ -71,7 +71,7 @@ namespace Tests
 
             var handler = SpotifyHandler.GetAuthorizedByIds(_clientId, _secretId);
 
-            var tracksPairs = handler.FindTracksPairs(trackList, 100);
+            var tracksPairs = handler.FindTracksPairs(trackList, 50);
 
             var sb = new StringBuilder();
             var i = 0;

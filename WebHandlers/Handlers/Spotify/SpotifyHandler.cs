@@ -38,7 +38,6 @@ namespace WebHandlers.Handlers.Spotify
             return FindTrackPairAsync(track, new CancellationToken()).GetAwaiter().GetResult();
         }
 
-
         /// <summary>
         ///     Async searching of the similar track on spotify via default track model.
         /// </summary>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MigrateYourMusic.Services;
 
 namespace MigrateYourMusic
 {
@@ -20,6 +21,7 @@ namespace MigrateYourMusic
         {
             services.AddRazorPages();
             services.AddMvc();
+            services.AddVkTrackListDownloader(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,11 +41,8 @@ namespace MigrateYourMusic
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
         }
     }

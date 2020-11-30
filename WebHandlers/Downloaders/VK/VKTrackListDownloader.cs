@@ -1,25 +1,25 @@
-﻿using WebHandlers.Models;
-using VkNet;
-using VkNet.Model.RequestParams;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using VkNet.Model;
 using System.Linq;
+using VkNet;
+using VkNet.Model;
+using VkNet.Model.RequestParams;
 using WebHandlers.Interfaces;
+using WebHandlers.Models;
 using WebHandlers.Utils;
 
 namespace WebHandlers.Downloaders.VK
 {
     public class VkTrackListDownloader : ITrackListDownloader<VkTrack, User>
     {
-        private readonly uint _maxAudioPerRequest;
         private readonly VkApi _api;
+        private readonly uint _maxAudioPerRequest;
 
         /// <summary>
-        /// Конструктор подразумевает авторизацию.
+        ///     This constructor assumes authorization.
         /// </summary>
-        /// <param name="api">Авторизованное API VK.</param>
-        /// <param name="maxAudioPerRequest">Максимальное количество треков за запрос. Не может быть больше 6к</param>
+        /// <param name="api">Authorized <see cref="VkApi" /></param>
+        /// <param name="maxAudioPerRequest">Max count of tracks per one request. Should be less than 6k and more than 0</param>
         public VkTrackListDownloader(VkApi api, uint maxAudioPerRequest)
         {
             Guarantee.IsArgumentNotNull(api, nameof(api));
@@ -34,21 +34,21 @@ namespace WebHandlers.Downloaders.VK
         }
 
         /// <summary>
-        /// Получает список треков пользователя по ID.
+        ///     Gets track list of specified user.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="user">User of Vk.</param>
+        /// <returns>Collection of <see cref="VkTrack" /></returns>
         public IEnumerable<VkTrack> DownloadTrackList(User user)
         {
             Guarantee.IsArgumentNotNull(user, nameof(user));
 
-            long tracksCount = _api.Audio.GetCount(user.Id);
+            var tracksCount = _api.Audio.GetCount(user.Id);
             if (tracksCount <= 0)
                 return null;
 
             if (tracksCount > _maxAudioPerRequest)
             {
-                List<VkTrack> tracksList = new List<VkTrack>();
+                var tracksList = new List<VkTrack>();
 
                 for (uint songListOffset = 0; songListOffset < tracksCount; songListOffset += _maxAudioPerRequest)
                 {
@@ -59,16 +59,20 @@ namespace WebHandlers.Downloaders.VK
                         Count = _maxAudioPerRequest
                     });
 
-                    tracksList.AddRange(vkAudioCollection.Select(t => (VkTrack)t));
+                    tracksList.AddRange(vkAudioCollection.Select(t => (VkTrack) t));
                 }
 
                 return tracksList;
             }
             else
             {
-                var vkAudioCollection = _api.Audio.Get(new AudioGetParams { OwnerId = user.Id, Count = tracksCount});
-
-                return vkAudioCollection.Select(t => (VkTrack)t);
+                var vkAudioCollection = _api.Audio.Get(new AudioGetParams
+                {
+                    OwnerId = user.Id,
+                    Count = tracksCount
+                });
+                
+                return vkAudioCollection.Select(t => (VkTrack) t);
             }
         }
     }

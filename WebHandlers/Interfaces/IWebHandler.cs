@@ -6,15 +6,17 @@ using WebHandlers.Models;
 
 namespace WebHandlers.Interfaces
 {
-    public interface IWebHandler<T> where T : class
+    public interface IWebHandler<T, V> 
+        where T : class 
+        where V : Track
     {
-        T FindTrackPair(Track track);
+        T FindTrackPair(V track);
 
-        Task<T> FindTrackPairAsync(Track track, CancellationToken ct);
+        Task<T> FindTrackPairAsync(V track, CancellationToken ct);
 
-        Dictionary<Track, T> FindTracksPairs(IEnumerable<Track> tracks, int delay, Action<float> progress = null);
+        Dictionary<V, T> FindTracksPairs(IEnumerable<V> tracks, int delay, Action<float> progress = null);
 
-        Task<Dictionary<Track, T>> FindTracksPairsAsync(IEnumerable<Track> tracks, int delay, CancellationToken ct,
+        Task<Dictionary<V, T>> FindTracksPairsAsync(IEnumerable<V> tracks, int delay, CancellationToken ct,
             Action<float> progress = null);
 
         bool SaveTracks(IEnumerable<T> spotifyTracks, int delay);

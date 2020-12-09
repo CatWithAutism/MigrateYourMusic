@@ -14,7 +14,7 @@ namespace WebHandlers.Handlers.Spotify
     /// Wrapper of the <see cref="SpotifyClient"/>
     /// Implements: <see cref="IWebHandler{SpotifyHandler}"/>
     /// </summary>
-    public class SpotifyHandler : SpotifyClient, IWebHandler<SpotifyTrack>
+    public class SpotifyHandler : SpotifyClient, IWebHandler<SpotifyTrack, Track>
     {
         public SpotifyHandler(IToken token) : base(token)
         {

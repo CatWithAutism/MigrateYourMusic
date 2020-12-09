@@ -15,8 +15,6 @@ namespace Tests
     {
         private static readonly VkApi _api;
         private static readonly string _screenName;
-        private static readonly string _login;
-        private static readonly string _password;
         private static readonly string _clientId;
         private static readonly string _secretId;
 
@@ -27,15 +25,16 @@ namespace Tests
         {
             var iniData =
                 Utils.ReadFile(@"C:\Users\vlad3\source\repos\SpotifyHelper\SpotifyHelper\SpotifyHandlerConfig.ini");
-            _login = iniData.GetKey("VK.LOGIN");
-            _password = iniData.GetKey("VK.PASSWORD");
+            
+            var login = iniData.GetKey("VK.LOGIN");
+            var password = iniData.GetKey("VK.PASSWORD");
             _screenName = iniData.GetKey("VK.SCREEN_NAME");
 
             _clientId = iniData.GetKey("SPOTIFY.CLIENT_ID");
             _secretId = iniData.GetKey("SPOTIFY.SECRET_ID");
 
             //Тестам в любом случае нужна авторизация.
-            _api = VkUtils.AuthorizeApi(_login, _password);
+            _api = VkUtils.AuthorizeApi(login, password);
             Assert.IsTrue(_api.IsAuthorized);
         }
 

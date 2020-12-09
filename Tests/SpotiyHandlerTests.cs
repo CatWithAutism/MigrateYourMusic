@@ -12,6 +12,7 @@ namespace Tests
         {
             var iniData =
                 Utils.ReadFile(@"C:\Users\vlad3\source\repos\SpotifyHelper\SpotifyHelper\SpotifyHandlerConfig.ini");
+            
             var clientId = iniData.GetKey("SPOTIFY.CLIENT_ID");
             var secretId = iniData.GetKey("SPOTIFY.SECRET_ID");
 

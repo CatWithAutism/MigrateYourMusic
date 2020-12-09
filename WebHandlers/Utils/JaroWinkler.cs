@@ -7,7 +7,7 @@ namespace WebHandlers.Utils
     {
         private const double DefaultThreshold = 0.7;
         private const int Three = 3;
-        private const double JwCoef = 0.1;
+        private const double JwCoef = 0.1d;
 
         /// <summary>
         ///     Compute Jaro-Winkler similarity.

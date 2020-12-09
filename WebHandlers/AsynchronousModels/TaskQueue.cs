@@ -3,8 +3,9 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebHandlers.Utils;
 
-namespace WebHandlers.Utils
+namespace WebHandlers.AsynchronousModels
 {
     public class TaskQueue<T>
     {

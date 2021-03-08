@@ -1,7 +1,7 @@
-﻿using VkNet.Model.Attachments;
-using WebHandlers.Utils;
+﻿using MusicHandlers.Utils;
+using VkNet.Model.Attachments;
 
-namespace WebHandlers.Models
+namespace MusicHandlers.Models
 {
     /// <summary>
     /// The model which is using in this application to handle tracks from VK.

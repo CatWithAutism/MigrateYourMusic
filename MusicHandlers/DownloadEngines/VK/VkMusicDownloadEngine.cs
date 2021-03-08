@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MusicHandlers.Interfaces;
+using MusicHandlers.Models;
+using MusicHandlers.Utils;
 using VkNet;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
-using WebHandlers.Interfaces;
-using WebHandlers.Models;
-using WebHandlers.Utils;
 
-namespace WebHandlers.Downloaders.VK
+namespace MusicHandlers.DownloadEngines.VK
 {
-    public class VkTrackListDownloader : ITrackListDownloader<VkTrack, User>
+    public class VkMusicDownloadEngine : IMusicDownloadEngine<VkTrack, User>
     {
         private readonly VkApi _api;
         private readonly uint _maxAudioPerRequest;
@@ -20,7 +20,7 @@ namespace WebHandlers.Downloaders.VK
         /// </summary>
         /// <param name="api">Authorized <see cref="VkApi" /></param>
         /// <param name="maxAudioPerRequest">Max count of tracks per one request. Should be less than 6k and more than 0</param>
-        public VkTrackListDownloader(VkApi api, uint maxAudioPerRequest)
+        public VkMusicDownloadEngine(VkApi api, uint maxAudioPerRequest)
         {
             Guarantee.IsArgumentNotNull(api, nameof(api));
             Guarantee.IsGreaterThan(maxAudioPerRequest, nameof(maxAudioPerRequest), 0);
@@ -42,7 +42,7 @@ namespace WebHandlers.Downloaders.VK
         {
             Guarantee.IsArgumentNotNull(user, nameof(user));
 
-            long tracksCount = _api.Audio.GetCount(user.Id);
+            var tracksCount = _api.Audio.GetCount(user.Id);
 
             if (tracksCount <= 0)
                 return null;

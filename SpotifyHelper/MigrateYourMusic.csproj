@@ -14,13 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebHandlers\WebHandlers.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="SpotifyHandlerConfig.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MusicHandlers\MusicHandlers.csproj" />
   </ItemGroup>
 
 </Project>

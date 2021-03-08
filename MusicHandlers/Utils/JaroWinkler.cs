@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace WebHandlers.Utils
+namespace MusicHandlers.Utils
 {
     /// <summary>
     /// Copy-paste algorithm to check similarity of strings. 

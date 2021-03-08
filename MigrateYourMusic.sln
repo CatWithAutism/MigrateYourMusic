@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MigrateYourMusic", "Spotify
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{0C5E5C07-68DE-4BF6-A361-6801FDEDF8E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebHandlers", "WebHandlers\WebHandlers.csproj", "{B5D5F406-6197-4501-A9A7-F486BC6A4A93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicHandlers", "MusicHandlers\MusicHandlers.csproj", "{B5D5F406-6197-4501-A9A7-F486BC6A4A93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

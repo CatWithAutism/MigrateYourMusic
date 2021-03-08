@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebHandlers\WebHandlers.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="BasicInfo.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BasicInfo.Designer.cs</LastGenOutput>
@@ -40,6 +36,10 @@
       <Link>data.ini</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MusicHandlers\MusicHandlers.csproj" />
   </ItemGroup>
 
 </Project>

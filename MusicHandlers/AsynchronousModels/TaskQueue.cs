@@ -3,9 +3,9 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using WebHandlers.Utils;
+using MusicHandlers.Utils;
 
-namespace WebHandlers.AsynchronousModels
+namespace MusicHandlers.AsynchronousModels
 {
     public class TaskQueue<T>
     {

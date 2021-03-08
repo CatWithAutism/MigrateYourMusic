@@ -1,17 +1,18 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MusicHandlers.DownloadEngines.VK;
+using MusicHandlers.Models;
 using VkNet;
-using WebHandlers.Downloaders.VK;
-using WebHandlers.Handlers.Spotify;
-using WebHandlers.Utils;
+using MusicHandlers.SearchEngines.Spotify;
+using MusicHandlers.Utils;
 
 namespace Tests.IntegrationTests
 {
     [TestClass]
     public class VkToSpotifyTests
     {
-        private readonly SpotifyHandler _handler;
+        private readonly SpotifySearchEngine<Track> _searchEngine;
         private readonly VkApi _api;
         private readonly string _screenName;
         
@@ -37,26 +38,27 @@ namespace Tests.IntegrationTests
             
             Assert.IsNotNull(clientId);
             Assert.IsNotNull(secretId);
+
+            var spotifyClient = SpotifyUtils.GetAuthorizedByIds(clientId, secretId);
+            _searchEngine = new SpotifySearchEngine<Track>(spotifyClient);
             
-            _handler = SpotifyHandler.GetAuthorizedByIds(clientId, secretId);
-            
-            Assert.IsNotNull(_handler);
+            Assert.IsNotNull(_searchEngine);
         }
         
         [TestMethod]
         public void GetSongPairs()
         {
-            lock (_handler)
+            lock (_searchEngine)
             {
                 var user = VkUtils.GetUserByScreenName(_screenName, _api);
                 Assert.IsNotNull(user);
                 
-                var downloader = new VkTrackListDownloader(_api, 6000);
+                var downloader = new VkMusicDownloadEngine(_api, 6000);
                 var trackList = downloader.DownloadTrackList(user);
                 
                 Assert.IsNotNull(trackList);
 
-                var tracksPairs = _handler.FindTracksPairs(trackList);
+                var tracksPairs = _searchEngine.FindTracksPairs(trackList);
                 
                 Assert.IsNotNull(tracksPairs);
             }

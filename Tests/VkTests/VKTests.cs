@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MusicHandlers.DownloadEngines.VK;
 using VkNet;
-using WebHandlers.Downloaders.VK;
-using WebHandlers.Utils;
+using MusicHandlers.Utils;
 
 namespace Tests.VkTests
 {
@@ -50,7 +50,7 @@ namespace Tests.VkTests
         }
 
         /// <summary>
-        ///     Getting track list
+        ///     Getting the list of tracks
         /// </summary>
         [TestMethod]
         public void GetAudioVkTest()
@@ -58,8 +58,9 @@ namespace Tests.VkTests
             lock (_api)
             {
                 var user = VkUtils.GetUserByScreenName(_screenName, _api);
-                var downloader = new VkTrackListDownloader(_api, 6000);
+                var downloader = new VkMusicDownloadEngine(_api, 6000);
                 var trackList = downloader.DownloadTrackList(user);
+                
                 
                 Assert.IsNotNull(trackList);
                 Assert.AreNotEqual(0, trackList.Count());

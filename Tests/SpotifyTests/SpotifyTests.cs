@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WebHandlers.Handlers.Spotify;
-using WebHandlers.Models;
+using MusicHandlers.Models;
+using MusicHandlers.SearchEngines.Spotify;
+using MusicHandlers.Utils;
 
 namespace Tests.SpotifyTests
 {
     [TestClass]
     public class SpotifyTests
     {
-        private readonly SpotifyHandler _handler;
+        private readonly SpotifySearchEngine<Track> _searchEngine;
 
         public SpotifyTests()
         {
@@ -21,17 +22,18 @@ namespace Tests.SpotifyTests
             Assert.IsNotNull(clientId);
             Assert.IsNotNull(secretId);
             
-            _handler = SpotifyHandler.GetAuthorizedByIds(clientId, secretId);
+            var spotifyClient = SpotifyUtils.GetAuthorizedByIds(clientId, secretId);
+            _searchEngine = new SpotifySearchEngine<Track>(spotifyClient);
             
-            Assert.IsNotNull(_handler);
+            Assert.IsNotNull(_searchEngine);
         }
         
         [TestMethod]
         public void SearchTest()
         {
-            lock (_handler)
+            lock (_searchEngine)
             {
-                var song = _handler.FindTrackPair(new Track
+                var song = _searchEngine.FindTrackPair(new Track
                 {
                     Artist = "Fun Mode",
                     Title = "Стены Цитадели"

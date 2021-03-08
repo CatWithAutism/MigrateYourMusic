@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebHandlers.Utils
+namespace MusicHandlers.Utils
 {
     /// <summary>
     /// The shortest way to check your variables on something common.

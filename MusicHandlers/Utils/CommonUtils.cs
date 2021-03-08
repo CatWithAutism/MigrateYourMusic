@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WebHandlers.Utils
+namespace MusicHandlers.Utils
 {
     public static class CommonUtils
     {

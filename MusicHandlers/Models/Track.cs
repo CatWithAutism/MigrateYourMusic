@@ -1,4 +1,4 @@
-﻿namespace WebHandlers.Models
+﻿namespace MusicHandlers.Models
 {
     /// <summary>
     /// The default model of tracks.

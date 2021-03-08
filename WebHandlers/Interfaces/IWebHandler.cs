@@ -14,13 +14,13 @@ namespace WebHandlers.Interfaces
 
         Task<T> FindTrackPairAsync(V track, CancellationToken ct);
 
-        Dictionary<V, T> FindTracksPairs(IEnumerable<V> tracks, int delay, Action<float> progress = null);
+        Dictionary<V, T> FindTracksPairs(IEnumerable<V> tracks, Action<float> progress = null);
 
-        Task<Dictionary<V, T>> FindTracksPairsAsync(IEnumerable<V> tracks, int delay, CancellationToken ct,
+        Task<Dictionary<V, T>> FindTracksPairsAsync(IEnumerable<V> tracks, CancellationToken ct,
             Action<float> progress = null);
 
         bool SaveTracks(IEnumerable<T> spotifyTracks, int delay);
 
-        Task<bool> SaveTracksAsync(IEnumerable<T> spotifyTracks, int delay, CancellationToken ct);
+        Task<bool> SaveTracksAsync(IEnumerable<T> spotifyTracks, CancellationToken ct);
     }
 }

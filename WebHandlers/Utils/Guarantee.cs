@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace WebHandlers.Utils
 {
+    /// <summary>
+    /// The shortest way to check your variables on something common.
+    /// </summary>
     public static class Guarantee
     {
         #region Checks
@@ -43,7 +46,7 @@ namespace WebHandlers.Utils
         /// <param name="enumerable"></param>
         /// <param name="name"></param>
         /// <param name="caller"></param>
-        public static void IsEnumerableNotNullOrEmpty(IEnumerable<object> enumerable, string name,
+        public static void IsEnumerableNotNullOrEmpty<T>(IEnumerable<T> enumerable, string name,
             [CallerMemberName] string caller = "")
         {
             if (enumerable != null && enumerable.Any())

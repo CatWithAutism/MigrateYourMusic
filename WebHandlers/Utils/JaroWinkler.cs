@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace WebHandlers.Utils
 {
+    /// <summary>
+    /// Copy-paste algorithm to check similarity of strings. 
+    /// </summary>
     public static class JaroWinkler
     {
         private const double DefaultThreshold = 0.7;

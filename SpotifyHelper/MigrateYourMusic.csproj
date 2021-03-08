@@ -17,4 +17,10 @@
     <ProjectReference Include="..\WebHandlers\WebHandlers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SpotifyHandlerConfig.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

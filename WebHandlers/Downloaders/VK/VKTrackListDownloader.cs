@@ -42,7 +42,8 @@ namespace WebHandlers.Downloaders.VK
         {
             Guarantee.IsArgumentNotNull(user, nameof(user));
 
-            var tracksCount = _api.Audio.GetCount(user.Id);
+            long tracksCount = _api.Audio.GetCount(user.Id);
+
             if (tracksCount <= 0)
                 return null;
 

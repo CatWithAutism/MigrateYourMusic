@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MusicHandlers.DownloadEngines.VK;
+using MusicCarriers.Engines.DownloadEngines.VK;
+using MusicCarriers.Engines.Interfaces;
 using VkNet.Model;
-using MusicHandlers.Interfaces;
-using MusicHandlers.Models;
-using MusicHandlers.Utils;
+using MusicCarriers.Models;
+using MusicCarriers.Utils;
 
 namespace MigrateYourMusic.Services
 {

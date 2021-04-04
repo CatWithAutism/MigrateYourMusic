@@ -1,16 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace MusicHandlers.Utils
+namespace MusicCarriers.Utils
 {
     /// <summary>
     /// Copy-paste algorithm to check similarity of strings. 
     /// </summary>
-    public static class JaroWinkler
+    public class JaroWinkler : IComparer<string>
     {
         private const double DefaultThreshold = 0.7;
         private const int Three = 3;
         private const double JwCoef = 0.1d;
+        private const int MaxSimilarityPercents = 100;
+
+
+        int IComparer<string>.Compare(string str1, string str2)
+        {
+            return Convert.ToInt32(Similarity(str1, str2) * MaxSimilarityPercents);
+        }
 
         /// <summary>
         ///     Compute Jaro-Winkler similarity.
@@ -19,7 +27,7 @@ namespace MusicHandlers.Utils
         /// <param name="str2">The second string to compare.</param>
         /// <returns>The Jaro-Winkler similarity in the range [0, 1]</returns>
         /// <exception cref="ArgumentNullException">If s1 or s2 is null.</exception>
-        public static double Similarity(string str1, string str2)
+        public double Similarity(string str1, string str2)
         {
             Guarantee.IsStringNotNullOrEmpty(str1, nameof(str1));
             Guarantee.IsStringNotNullOrEmpty(str2, nameof(str2));
@@ -37,19 +45,7 @@ namespace MusicHandlers.Utils
             return jw;
         }
 
-        /// <summary>
-        ///     Return 1 - similarity.
-        /// </summary>
-        /// <param name="str1">The first string to compare.</param>
-        /// <param name="str2">The second string to compare.</param>
-        /// <returns>1 - similarity</returns>
-        /// <exception cref="ArgumentNullException">If s1 or s2 is null.</exception>
-        public static double Distance(string str1, string str2)
-        {
-            return 1.0 - Similarity(str1, str2);
-        }
-
-        private static int[] _macthes(string str1, string str2)
+        private int[] _macthes(string str1, string str2)
         {
             string max, min;
             if (str1.Length > str2.Length)

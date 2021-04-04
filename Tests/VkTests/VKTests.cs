@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicHandlers.DownloadEngines.VK;
+using MusicCarriers.Engines.DownloadEngines.VK;
 using VkNet;
-using MusicHandlers.Utils;
+using MusicCarriers.Utils;
 
 namespace Tests.VkTests
 {

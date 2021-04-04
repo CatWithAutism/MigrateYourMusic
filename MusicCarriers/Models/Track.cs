@@ -1,4 +1,4 @@
-﻿namespace MusicHandlers.Models
+﻿namespace MusicCarriers.Models
 {
     /// <summary>
     /// The default model of tracks.

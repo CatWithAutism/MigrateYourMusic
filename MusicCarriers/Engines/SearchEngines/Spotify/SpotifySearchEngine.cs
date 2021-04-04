@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MusicHandlers.Interfaces;
-using MusicHandlers.Models;
-using MusicHandlers.Utils;
+using MusicCarriers.Engines.Interfaces;
+using MusicCarriers.Models;
+using MusicCarriers.Utils;
 using SpotifyAPI.Web;
 
-namespace MusicHandlers.SearchEngines.Spotify
+namespace MusicCarriers.Engines.SearchEngines.Spotify
 {
     /// <summary>
     /// Wrapper of the <see cref="SpotifyClient"/>

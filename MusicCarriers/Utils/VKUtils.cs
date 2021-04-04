@@ -5,7 +5,7 @@ using VkNet;
 using VkNet.AudioBypassService.Extensions;
 using VkNet.Model;
 
-namespace MusicHandlers.Utils
+namespace MusicCarriers.Utils
 {
     public static class VkUtils
     {

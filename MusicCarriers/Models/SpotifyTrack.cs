@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using MusicHandlers.Utils;
+using MusicCarriers.Utils;
 using SpotifyAPI.Web;
 
-namespace MusicHandlers.Models
+namespace MusicCarriers.Models
 {
     /// <summary>
     /// The model which is using in this application to handle tracks from Spotify.

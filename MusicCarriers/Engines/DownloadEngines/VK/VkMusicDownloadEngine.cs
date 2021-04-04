@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MusicHandlers.Interfaces;
-using MusicHandlers.Models;
-using MusicHandlers.Utils;
+using MusicCarriers.Engines.Interfaces;
+using MusicCarriers.Models;
+using MusicCarriers.Utils;
 using VkNet;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
 
-namespace MusicHandlers.DownloadEngines.VK
+namespace MusicCarriers.Engines.DownloadEngines.VK
 {
     public class VkMusicDownloadEngine : IMusicDownloadEngine<VkTrack, User>
     {
@@ -23,8 +23,8 @@ namespace MusicHandlers.DownloadEngines.VK
         public VkMusicDownloadEngine(VkApi api, uint maxAudioPerRequest)
         {
             Guarantee.IsArgumentNotNull(api, nameof(api));
-            Guarantee.IsGreaterThan(maxAudioPerRequest, nameof(maxAudioPerRequest), 0);
-            Guarantee.IsLessOrEqual(maxAudioPerRequest, nameof(maxAudioPerRequest), 6000);
+            Guarantee.IsGreaterThan(maxAudioPerRequest, 0, nameof(maxAudioPerRequest));
+            Guarantee.IsLessOrEqual(maxAudioPerRequest, 6000, nameof(maxAudioPerRequest));
 
             if (!api.IsAuthorized)
                 throw new ArgumentException("API has to be authorized.", nameof(api));

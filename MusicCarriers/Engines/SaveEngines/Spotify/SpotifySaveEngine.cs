@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MusicHandlers.Interfaces;
-using MusicHandlers.Models;
-using MusicHandlers.Utils;
+using MusicCarriers.Engines.Interfaces;
+using MusicCarriers.Models;
+using MusicCarriers.Utils;
 using SpotifyAPI.Web;
 
-namespace MusicHandlers.SaveEngines.Spotify
+namespace MusicCarriers.Engines.SaveEngines.Spotify
 {
     public class SpotifySaveEngine : IMusicSaveEngine<SpotifyTrack>
     {
@@ -47,29 +47,25 @@ namespace MusicHandlers.SaveEngines.Spotify
                 
                 try
                 {
-                    if (!await _client.Library.SaveTracks(new LibrarySaveTracksRequest(list.Where(t => t != null)
-                        .Select(t => t.Id)
-                        .Distinct()
-                        .ToList())))
-                    {
-                        return false;
-                    }
+                    return await SaveTracks(list);
                 }
                 catch (APITooManyRequestsException tooManyRequestsException)
                 {
                     await Task.Delay(tooManyRequestsException.RetryAfter + TimeSpan.FromSeconds(1), ct);
 
-                    if (!await _client.Library.SaveTracks(new LibrarySaveTracksRequest(list.Where(t => t != null)
-                        .Select(t => t.Id)
-                        .Distinct()
-                        .ToList())))
-                    {
-                        return false;
-                    }
+                    return await SaveTracks(list);
                 }
             }
 
             return true;
+        }
+
+        private Task<bool> SaveTracks(IEnumerable<SpotifyTrack> enumerable)
+        {
+            return _client.Library.SaveTracks(new LibrarySaveTracksRequest(enumerable.Where(t => t != null)
+                .Select(t => t.Id)
+                .Distinct()
+                .ToList()));
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MusicHandlers.Models;
-using MusicHandlers.SearchEngines.Spotify;
-using MusicHandlers.Utils;
+using MusicCarriers.Engines.SearchEngines.Spotify;
+using MusicCarriers.Models;
+using MusicCarriers.Utils;
 
 namespace Tests.SpotifyTests
 {

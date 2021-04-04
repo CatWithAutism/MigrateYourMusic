@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace MusicHandlers.Utils
+namespace MusicCarriers.Utils
 {
     /// <summary>
     /// The shortest way to check your variables on something common.
@@ -67,7 +67,7 @@ namespace MusicHandlers.Utils
         /// <param name="name"></param>
         /// <param name="comparingValue"></param>
         /// <param name="caller"></param>
-        public static void IsGreaterThan(int value, string name, int comparingValue,
+        public static void IsGreaterThan(int value, int comparingValue, string name, 
             [CallerMemberName] string caller = "")
         {
             if (value > comparingValue)
@@ -85,7 +85,7 @@ namespace MusicHandlers.Utils
         /// <param name="name"></param>
         /// <param name="comparingValue"></param>
         /// <param name="caller"></param>
-        public static void IsGreaterThan(uint value, string name, uint comparingValue,
+        public static void IsGreaterThan(uint value, uint comparingValue, string name, 
             [CallerMemberName] string caller = "")
         {
             if (value > comparingValue)
@@ -120,13 +120,13 @@ namespace MusicHandlers.Utils
         #region LessOrEqual
 
         /// <summary>
-        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> greate than <paramref name="comparingValue" />
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> greater than <paramref name="comparingValue" />
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
         /// <param name="comparingValue"></param>
         /// <param name="caller"></param>
-        public static void IsLessOrEqual(int value, string name, int comparingValue,
+        public static void IsLessOrEqual(int value,  int comparingValue, string name,
             [CallerMemberName] string caller = "")
         {
             if (value <= comparingValue)
@@ -137,13 +137,13 @@ namespace MusicHandlers.Utils
         }
 
         /// <summary>
-        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> greate than <paramref name="comparingValue" />
+        ///     Throw an <see cref="ArgumentException" /> if <paramref name="value" /> greater than <paramref name="comparingValue" />
         /// </summary>
         /// <param name="value"></param>
         /// <param name="name"></param>
         /// <param name="comparingValue"></param>
         /// <param name="caller"></param>
-        public static void IsLessOrEqual(uint value, string name, uint comparingValue,
+        public static void IsLessOrEqual(uint value, uint comparingValue, string name, 
             [CallerMemberName] string caller = "")
         {
             if (value <= comparingValue)

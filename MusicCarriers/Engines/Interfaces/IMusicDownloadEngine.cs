@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MusicHandlers.Interfaces
+namespace MusicCarriers.Engines.Interfaces
 {
     public interface IMusicDownloadEngine<out TOut,in TIn>
     {

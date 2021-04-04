@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using MusicHandlers.Models;
+using MusicCarriers.Models;
 
-namespace MusicHandlers.Interfaces
+namespace MusicCarriers.Engines.Interfaces
 {
     public interface IMusicSaveEngine<in TIn> where TIn : Track
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MusicHandlers.Interfaces;
-using MusicHandlers.Models;
+using MusicCarriers.Engines.Interfaces;
+using MusicCarriers.Models;
 
-namespace MusicHandlers
+namespace MusicCarriers
 {
     public class MusicCarrier<T, V> 
         where T : Track 

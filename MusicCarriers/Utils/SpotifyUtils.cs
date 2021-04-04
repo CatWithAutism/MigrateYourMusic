@@ -1,9 +1,8 @@
 ﻿using System;
-using MusicHandlers.Models;
-using MusicHandlers.SearchEngines.Spotify;
+using MusicCarriers.Engines.SearchEngines.Spotify;
 using SpotifyAPI.Web;
 
-namespace MusicHandlers.Utils
+namespace MusicCarriers.Utils
 {
     public static class SpotifyUtils
     {
